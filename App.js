@@ -26,6 +26,7 @@ const App: () => React$Node = () => {
      <Stack.Navigator>
      <Stack.Screen
           name="Login"
+          options={{headerShown:false}}
           component={Login}
         />
         <Stack.Screen
