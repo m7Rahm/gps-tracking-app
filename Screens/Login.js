@@ -7,30 +7,39 @@ import {
   TouchableWithoutFeedback,
   Keyboard
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import HorizontalLine from '../Components/HorizontalLine'
 
 export default function ({ navigation }) {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
-  const onClick = () => { //should be async
-    // const resp = await fetch('http://192.168.0.106/login:8000', {
-    //   headers: {
-    //     'content-type': 'application/json',
-    //     'method': 'Post'
-    //   },
-    //   body: JSON.stringify({ username: userName, password: password })
-    // });
-    // const respJson = await resp.json();
-    // respJson.result ?
-    const playList = [
-      { singer: 'Linkin Park', track: 'All For Nothing', id: 1 },
-      { singer: 'Silver', track: 'Wham Bam', id: 2 },
-      { singer: 'Zemaria', track: 'Space Ahead', id: 3 },
-      { singer: 'Royal Blood', track: 'Out Of The Black', id: 4 },
-      { singer: 'Royal Blood', track: 'Lights Out', id: 5 }
-    ]
-    navigation.navigate('Home', { name: userName, data: playList });
-    // alert('wrong credentials')
+  const [buttonAvailable, setButtonAvailable] = useState(false);
+  useEffect(() => {
+    let isAvailable = false;
+    (password == '' || userName == '') ?
+      isAvailable = false :
+      isAvailable = true;
+    setButtonAvailable(() => isAvailable);
+  }, [password, userName])
+  const onClick = async () => {
+    try { //should be async
+      const resp = await fetch('http://192.168.0.106:3000/login', {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Method': 'Post'
+        },
+        body: JSON.stringify({ username: userName, password: password })
+      });
+      const respJson = await resp.json();
+      respJson.result ?
+        (
+          playList = respJson.data,
+          navigation.navigate('Home', { name: userName, data: playList })) :
+        alert('wrong credentials')
+    } catch (exception) {
+      console.log(exception)
+    }
   }
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -39,18 +48,19 @@ export default function ({ navigation }) {
         <View style={styles.inputContainer}>
           <TextInput
             textContentType='username'
-            placeholderTextColor='#aaaaaa'
-            placeholder='username'
+            placeholderTextColor='#666666'
+            placeholder='Username'
             value={userName}
-            onChangeText={(text) => setUserName(() => text)}
+            onChangeText={(text) => setUserName(() => text)
+            }
             style={styles.input}>
           </TextInput>
         </View>
         <View style={styles.inputContainer}>
           <TextInput
             textContentType='password'
-            placeholderTextColor='#aaaaaa'
-            placeholder='password'
+            placeholderTextColor='#666666'
+            placeholder='Password'
             style={styles.input}
             onChangeText={(text) => setPassword(() => text)}
             value={password}>
@@ -58,11 +68,25 @@ export default function ({ navigation }) {
         </View>
         <TouchableOpacity
           onPress={onClick}
-          style={styles.submitButton}>
-          <Text style={{ color: '#bbbbbb', paddingVertical: 8, paddingHorizontal: 11 }}>
-            Log in
+          disabled={!buttonAvailable}
+          style={styles.btnContainer(buttonAvailable)}>
+          <Text style={styles.btnText(buttonAvailable)}>
+            Log In
           </Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.forgotPasswordContainer}>
+          <Text style={styles.forgotPassword}>
+            Forgot password?
+          </Text>
+        </TouchableOpacity>
+        <HorizontalLine/>
+        <View  style={styles.signUpContainerView}>
+        <TouchableOpacity style={styles.signUpButtonContainer}>
+        <Text style={styles.btnText(buttonAvailable)}>
+            Sign Up
+          </Text>
+        </TouchableOpacity>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   )
@@ -70,40 +94,63 @@ export default function ({ navigation }) {
 
 const styles = StyleSheet.create({
   body: {
-    backgroundColor: 'steelblue',
+    backgroundColor: 'black',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
   },
   text: {
+    marginTop:200,
     fontSize: 25,
     fontWeight: 'bold',
     color: 'white',
     marginBottom: 50,
     fontFamily: 'Arial',
-    marginTop: 150
+    marginTop: 0
   },
   inputContainer: {
-    width: 180,
-    backgroundColor: '#112233',
-    textAlignVertical: 'center',
+    width: '95%',
     borderRadius: 5,
-    marginBottom: 10
+    marginBottom: 10,
+    overflow: 'hidden'
   },
   input: {
-    color: 'white',
-    width: 160,
-    backgroundColor: '#112233',
+    borderColor: '#666666',
+    borderWidth: 0.75,
+    color: '#dddddd',
+    backgroundColor: '#111111',
     padding: 8,
+    textDecorationLine: 'none',
     fontFamily: 'Arial',
-    textAlignVertical: 'center',
     borderRadius: 5
   },
-  submitButton: {
-    marginTop: 10,
-    textAlign: 'center',
+  forgotPassword: {
+    fontWeight: 'bold',
+    color: '#193560'
+  },
+  forgotPasswordContainer: {
+    marginTop: 40
+  },
+  btnContainer:(buttonAvailable)=>({
+    marginTop: 15,
+    backgroundColor: !buttonAvailable ? '#193550' : '#224470',
+    borderRadius: 5,
+    width: '95%',
+  }),
+  btnText:(buttonAvailable)=>({
+    color: !buttonAvailable ? '#aaaaaa' : '#dddddd',
+    paddingVertical: 10,
     fontFamily: 'Arial',
-    backgroundColor: '#112233',
-    borderRadius: 5
+    textAlign: 'center'
+  }),
+  signUpContainerView:{
+    marginTop:40,
+    flex:0.35,
+    justifyContent:'flex-end',
+    width: '95%',
+  },
+  signUpButtonContainer:{
+    backgroundColor: 'steelblue',
+    borderRadius: 5,
   }
 });
