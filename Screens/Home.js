@@ -1,28 +1,42 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
-    Text,
     StyleSheet,
     View,
-    FlatList
+    TouchableOpacity,
+    Text
 } from 'react-native'
-import ListItem from '../Components/ListItem'
+import MapView,{
+    Marker,
+} from 'react-native-maps'
 export default function (props) {
-    console.log(JSON.stringify(props.route.params.data));
-    const name = props.route.params.name
-    const data = props.route.params.data;
+
+    const [markerCoordinates, setMarkerCoordinates] = useState({
+        latitude: 37.78825,
+        longitude: -122.4324,
+    })
     return (<>
         <View style={styles.body}>
-            {name != '' ?
-                <Text style={styles.text}>{`${name}'s playlist`}</Text> :
-                <View style={{ height: 0 }} />}
-            <FlatList
-                data={data}
-                renderItem={({ item }) => <ListItem
-                    singer={item.singer}
-                    track={item.track}
-                />}
-                keyExtractor={({ item }, index) => index.toString()}>
-            </FlatList>
+        <TouchableOpacity onPress={()=>setMarkerCoordinates(prev => ({
+            latitude: prev.latitude+0.001,
+            longitude: prev.longitude+0.001
+        }))} >
+            <Text>Press me</Text>
+        </TouchableOpacity>
+            <MapView
+                style={{flex:1}}
+                initialRegion={{
+                    latitude: 37.78825,
+                    longitude: -122.4324,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                }}
+            >
+                <Marker
+                    coordinate = {
+                        markerCoordinates
+                    }
+                />
+            </MapView>
         </View>
     </>
     )
@@ -31,8 +45,6 @@ const styles = StyleSheet.create({
     body: {
         display: 'flex',
         flex: 1,
-        backgroundColor: '#112233',
-        justifyContent: 'flex-start'
     },
     text: {
         textAlign: 'center',

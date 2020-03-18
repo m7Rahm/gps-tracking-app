@@ -32,7 +32,7 @@ const App: () => React$Node = () => {
         <Stack.Screen
           name="Home"
           component={Home}
-          options={{title:'Home'}}
+          options={{headerShown:false}}
           />
         </Stack.Navigator>
         </NavigationContainer>

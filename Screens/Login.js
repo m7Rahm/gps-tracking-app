@@ -21,22 +21,23 @@ export default function ({ navigation }) {
       isAvailable = true;
     setButtonAvailable(() => isAvailable);
   }, [password, userName])
-  const onClick = async () => {
+  const onClick = () => {
     try { //should be async
-      const resp = await fetch('http://192.168.0.106:3000/login', {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Method': 'Post'
-        },
-        body: JSON.stringify({ username: userName, password: password })
-      });
-      const respJson = await resp.json();
-      respJson.result ?
-        (
-          playList = respJson.data,
-          navigation.navigate('Home', { name: userName, data: playList })) :
-        alert('wrong credentials')
+      // const resp = await fetch('http://192.168.0.106:3000/login', {
+      //   headers: {
+      //     'Accept': 'application/json',
+      //     'Content-Type': 'application/json',
+      //     'Method': 'Post'
+      //   },
+      //   body: JSON.stringify({ username: userName, password: password })
+      // });
+      // const respJson = await resp.json();
+      // respJson.result ?
+      //   (
+      //     playList = respJson.data,
+         navigation.navigate('Home', { name: userName })
+      // ) :
+      // alert('wrong credentials')
     } catch (exception) {
       console.log(exception)
     }
@@ -82,7 +83,7 @@ export default function ({ navigation }) {
         <HorizontalLine/>
         <View  style={styles.signUpContainerView}>
         <TouchableOpacity style={styles.signUpButtonContainer}>
-        <Text style={styles.btnText(buttonAvailable)}>
+          <Text style={styles.btnText(buttonAvailable)}>
             Sign Up
           </Text>
         </TouchableOpacity>
