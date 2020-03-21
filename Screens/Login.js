@@ -5,9 +5,11 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
+  Alert
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-community/async-storage'
 import HorizontalLine from '../Components/HorizontalLine'
 
 export default function ({ navigation }) {
@@ -21,6 +23,15 @@ export default function ({ navigation }) {
       isAvailable = true;
     setButtonAvailable(() => isAvailable);
   }, [password, userName])
+
+  const logIn = async () => {
+    try {
+      await AsyncStorage.setItem('isLoggedIn', 'true');
+      navigation.navigate('Home', { name: userName })
+    } catch (e) {
+      Alert('Something went wrong!');
+    }
+  }
   const onClick = () => {
     try { //should be async
       // const resp = await fetch('http://192.168.0.106:3000/login', {
@@ -35,7 +46,7 @@ export default function ({ navigation }) {
       // respJson.result ?
       //   (
       //     playList = respJson.data,
-         navigation.navigate('Home', { name: userName })
+      logIn();
       // ) :
       // alert('wrong credentials')
     } catch (exception) {
@@ -80,13 +91,13 @@ export default function ({ navigation }) {
             Forgot password?
           </Text>
         </TouchableOpacity>
-        <HorizontalLine/>
-        <View  style={styles.signUpContainerView}>
-        <TouchableOpacity style={styles.signUpButtonContainer}>
-          <Text style={styles.btnText(buttonAvailable)}>
-            Sign Up
+        <HorizontalLine />
+        <View style={styles.signUpContainerView}>
+          <TouchableOpacity style={styles.signUpButtonContainer}>
+            <Text style={styles.btnText(buttonAvailable)}>
+              Sign Up
           </Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -101,7 +112,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   text: {
-    marginTop:200,
+    marginTop: 200,
     fontSize: 25,
     fontWeight: 'bold',
     color: 'white',
@@ -132,25 +143,25 @@ const styles = StyleSheet.create({
   forgotPasswordContainer: {
     marginTop: 40
   },
-  btnContainer:(buttonAvailable)=>({
+  btnContainer: (buttonAvailable) => ({
     marginTop: 15,
     backgroundColor: !buttonAvailable ? '#193550' : '#224470',
     borderRadius: 5,
     width: '95%',
   }),
-  btnText:(buttonAvailable)=>({
+  btnText: (buttonAvailable) => ({
     color: !buttonAvailable ? '#aaaaaa' : '#dddddd',
     paddingVertical: 10,
     fontFamily: 'Arial',
     textAlign: 'center'
   }),
-  signUpContainerView:{
-    marginTop:40,
-    flex:0.35,
-    justifyContent:'flex-end',
+  signUpContainerView: {
+    marginTop: 40,
+    flex: 0.35,
+    justifyContent: 'flex-end',
     width: '95%',
   },
-  signUpButtonContainer:{
+  signUpButtonContainer: {
     backgroundColor: 'steelblue',
     borderRadius: 5,
   }
