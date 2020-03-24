@@ -42,9 +42,7 @@ export default (props) => {
     }, 3000);
     return () => clearInterval(timerId)
   }, [])
-  useEffect(() => {
-    animate()
-  }, [markers])
+  useEffect(() => {animate()}, [markers])
 
   const animate = () => {
     try {

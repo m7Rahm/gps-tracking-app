@@ -29,7 +29,7 @@ const App = () => {
   const checkAuth = async () => {
     try {
       const value = await AsyncStorage.getItem('isLoggedIn');
-      console.log(value);
+      //console.log(value);
       value == 'true' ?
         setIsLoggedIn(() => true) :
         ''
