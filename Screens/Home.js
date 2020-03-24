@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   StyleSheet,
   View,
   ImageBackground,
   Animated,
-  TouchableOpacity
+  TouchableOpacity,
+  Platform
 } from 'react-native'
 import MapView, {
   Marker, AnimatedRegion,
@@ -23,6 +24,7 @@ export default (props) => {
       longitude: -122.4334,
     },
   ])
+  const refs = markers.map(marker => useRef())
   const [animateToCoordinate] = useState(markers.map(
     marker => new AnimatedRegion({
       latitude: marker.latitude,
@@ -34,31 +36,47 @@ export default (props) => {
   useEffect(() => {
     const timerId = setInterval(() => {
       setMarkers(prevState => prevState.map(marker => ({
-        latitude: marker.latitude + 0.0001,
-        longitude: marker.longitude + 0.0001
+        latitude: marker.latitude + 0.001,
+        longitude: marker.longitude + 0.001
       })))
     }, 3000);
     return () => clearInterval(timerId)
   }, [])
   useEffect(() => {
-    animateToCoordinate.map(
-      (coordinate, index) => coordinate.timing(
-        {
-          latitude: markers[index].latitude,
-          longitude: markers[index].longitude,
-          duration: 3000
-        }
-      ).start()
-    )
+    animate()
   }, [markers])
-  //useEffect(()=>{animateIcon(iconIsOpen)},[iconIsOpen])
+
+  const animate = () => {
+    try {
+      const newCoordinates = markers.map(marker => ({
+        latitude: marker.latitude,
+        longitude: marker.longitude
+      }))
+      !(Platform.OS === 'android') ?
+        animateToCoordinate.map(
+          (coordinate, index) => coordinate.timing(
+            {
+              latitude: markers[index].latitude,
+              longitude: markers[index].longitude,
+              duration: 3000
+            }
+          ).start()
+        ) :
+        newCoordinates.map((newCoord, index) =>
+          refs[index].current._component.animateMarkerToCoordinate(newCoord, 3100)
+        )
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   const animateIcon = (direction) => {
     !direction ?
       Animated.timing(
         animatedPosition,
         {
-          toValue: 80,
-          duration: 800,
+          toValue: 70,
+          duration: 600,
           useNativeDriver: true
         }
       ).start() :
@@ -66,7 +84,7 @@ export default (props) => {
         animatedPosition,
         {
           toValue: 10,
-          duration: 800,
+          duration: 600,
           useNativeDriver: true
         }
       ).start()
@@ -86,6 +104,7 @@ export default (props) => {
           {
             animateToCoordinate.map((coordinate, index) =>
               <Marker.Animated
+                ref={refs[index]}
                 key={index}
                 coordinate={coordinate}
               />
@@ -93,13 +112,18 @@ export default (props) => {
           }
         </MapView>
         <ImageBackground source={require('../etc/coke-icon.png')} style={styles.icon}>
-          <TouchableOpacity style={{ height: 60, width: 60 }} onPressOut={() => {
-            animateIcon(iconIsOpen)
-            setIconIsOpen((prev) => !prev)
-          }}></TouchableOpacity>
+          <TouchableOpacity
+            style={{ height: 55, width: 55 }}
+            onPressOut={() => {
+              animateIcon(iconIsOpen)
+              setIconIsOpen((prev) => !prev)
+            }}>
+          </TouchableOpacity>
         </ImageBackground>
-        <Animated.View style={styles.settings(animatedPosition)}>
-          <TouchableOpacity disabled={!iconIsOpen} style={{ width: 60, height: 60 }} onPressOut={() => props.navigation.navigate('Settings')} />
+        <Animated.View style={styles.settingsContainer(animatedPosition)}>
+          <ImageBackground style={{ width: 50, height: 50 }} source={require('../etc/unnamed.png')}>
+            <TouchableOpacity disabled={!iconIsOpen} style={{ width: 60, height: 60 }} onPressOut={() => props.navigation.navigate('Settings')} />
+          </ImageBackground>
         </Animated.View>
       </View>
     </>
@@ -118,23 +142,22 @@ const styles = StyleSheet.create({
     marginBottom: 30
   },
   icon: {
-    width: 60,
-    height: 60,
+    width: 55,
+    height: 55,
     position: 'absolute',
     top: 10,
     left: 10,
-    zIndex:2
+    zIndex: 2
   },
-  settings: (position) => ({
-    backgroundColor: 'purple',
-    width: 60,
-    height: 60,
-    zIndex:1,
+  settingsContainer: (position) => ({
+    zIndex: 1,
+    width: 50,
+    height: 50,
     position: 'absolute',
     translateY: position,
     left: 10,
     opacity: position.interpolate({
-      inputRange: [50, 80],
+      inputRange: [50, 70],
       outputRange: [0.3, 1]
     })
   })
