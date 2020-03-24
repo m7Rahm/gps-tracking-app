@@ -12,7 +12,7 @@ import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage'
 import HorizontalLine from '../Components/HorizontalLine'
 
-export default function ({ navigation }) {
+export default ({ navigation }) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [buttonAvailable, setButtonAvailable] = useState(false);
@@ -29,7 +29,7 @@ export default function ({ navigation }) {
       await AsyncStorage.setItem('isLoggedIn', 'true');
       navigation.navigate('Home', { name: userName })
     } catch (e) {
-      Alert('Something went wrong!');
+      Alert.prompt('Something went wrong!');
     }
   }
   const onClick = () => {
@@ -71,6 +71,7 @@ export default function ({ navigation }) {
         <View style={styles.inputContainer}>
           <TextInput
             textContentType='password'
+            secureTextEntry={true}
             placeholderTextColor='#666666'
             placeholder='Password'
             style={styles.input}
@@ -96,7 +97,7 @@ export default function ({ navigation }) {
           <TouchableOpacity style={styles.signUpButtonContainer}>
             <Text style={styles.btnText(buttonAvailable)}>
               Sign Up
-          </Text>
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -147,7 +148,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     backgroundColor: !buttonAvailable ? '#193550' : '#224470',
     borderRadius: 5,
-    width: '95%',
+    width: '95%'
   }),
   btnText: (buttonAvailable) => ({
     color: !buttonAvailable ? '#aaaaaa' : '#dddddd',
@@ -159,10 +160,10 @@ const styles = StyleSheet.create({
     marginTop: 40,
     flex: 0.35,
     justifyContent: 'flex-end',
-    width: '95%',
+    width: '95%'
   },
   signUpButtonContainer: {
     backgroundColor: 'steelblue',
-    borderRadius: 5,
+    borderRadius: 5
   }
 });

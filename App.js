@@ -9,13 +9,15 @@ import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
 import Login from './Screens/Login'
 import Home from './Screens/Home'
+import Settings from './Screens/Settings'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {
   SafeAreaView,
   StatusBar,
   Alert,
-  Text
+  Text,
+  StyleSheet
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage'
 
@@ -56,6 +58,19 @@ const App = () => {
                 name="Home"
                 component={Home}
                 options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Settings"
+                component={Settings}
+                options={{ headerTitle:'Settings',
+                headerStyle: {backgroundColor:'#123456'},
+                headerTitleAlign:'center',
+                headerTintColor:'white',
+                headerTitleStyle:{
+                  color: 'white',
+                  fontWeight: 'bold',
+                  fontSize: 20
+                }}}
               />
             </Stack.Navigator>
           </NavigationContainer>
