@@ -26,11 +26,16 @@ const App = () => {
   const Stack = createStackNavigator();
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [initialMapStyle, setInitialMapStyle] = useState('standard')
   const checkAuth = async () => {
     try {
-      const value = await AsyncStorage.getItem('isLoggedIn');
+      const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
+      const mapStyle = await AsyncStorage.getItem('mapStyle');
+      const initialMapStyle = mapStyle || 'standard';
+      setInitialMapStyle(()=>initialMapStyle);
+
       //console.log(value);
-      value == 'true' ?
+      isLoggedIn == 'true' ?
         setIsLoggedIn(() => true) :
         ''
       setIsLoading(() => false)
@@ -58,6 +63,7 @@ const App = () => {
                 name="Home"
                 component={Home}
                 options={{ headerShown: false }}
+                initialParams={{mapStyle: initialMapStyle }}
               />
               <Stack.Screen
                 name="Settings"

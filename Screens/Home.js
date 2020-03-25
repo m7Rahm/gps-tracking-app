@@ -12,6 +12,7 @@ import MapView, {
 } from 'react-native-maps'
 
 export default (props) => {
+  const mapStyle = props.route.params.mapStyle||'standard';
   const [animatedPosition] = useState(new Animated.Value(10));
   const [iconIsOpen, setIconIsOpen] = useState(false);
   const [markers, setMarkers] = useState([
@@ -92,6 +93,7 @@ export default (props) => {
       <View style={styles.body}>
         <MapView
           style={{ flex: 1 }}
+          mapType={mapStyle}
           initialRegion={{
             latitude: 37.78825,
             longitude: -122.4324,

@@ -55,6 +55,10 @@ export default (props) => {
             {Platform.OS === 'android' && <Picker.Item label='Terrain' value='terrain' />}
           </Picker>
         </View>
+        <View style={styles.mapStyleContainer}>
+        <Text style={styles.showOnMapLabel}>Show on map</Text>
+        <Text style={styles.showOnMapValue}>All vehicles</Text>
+        </View>
         <View style={{ flex: 1, flexDirection: 'column-reverse', alignItems: 'stretch' }}>
           <TouchableOpacity style={styles.logOut} onPress={logOut}>
             <Text style={styles.logOutText}> Log Out</Text>
@@ -75,7 +79,8 @@ const styles = StyleSheet.create({
   },
   mapLabel: {
     color: '#333333',
-    fontWeight: '600'
+    fontWeight: '600',
+    marginBottom:10
   },
   logOut: {
     borderRadius: 10,
@@ -103,5 +108,20 @@ const styles = StyleSheet.create({
   },
   pickerItem: {
     textAlign: 'right'
+  },
+  showOnMapLabel: {
+    textAlignVertical: 'center',
+    fontWeight: 'bold',
+    fontSize: 17,
+    color: '#123456',
+    paddingVertical:17
+  },
+  showOnMapValue:{
+    textAlignVertical: 'center',
+    fontWeight: '800',
+    fontSize: 17,
+    color: 'black',
+    paddingVertical:17,
+    marginRight:50
   }
 })
