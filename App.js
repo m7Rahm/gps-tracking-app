@@ -10,6 +10,7 @@ import React, { useState, useEffect } from 'react';
 import Login from './Screens/Login'
 import Home from './Screens/Home'
 import Settings from './Screens/Settings'
+import Notifications from './Screens/Notifications'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {
@@ -71,6 +72,19 @@ const App = () => {
                 options={{ headerTitle:'Settings',
                 headerStyle: {backgroundColor:'#123456'},
                 headerTitleAlign:'center',
+                headerTintColor:'white',
+                headerTitleStyle:{
+                  color: 'white',
+                  fontWeight: 'bold',
+                  fontSize: 20
+                }}}
+              />
+              <Stack.Screen
+                name="Notifications"
+                component={Notifications}
+                options={{ headerTitle: 'Notifications',
+                headerTitleAlign:'center',
+                headerStyle: {backgroundColor:'#123456'},
                 headerTintColor:'white',
                 headerTitleStyle:{
                   color: 'white',

@@ -12,7 +12,7 @@ import MapView, {
 } from 'react-native-maps'
 
 export default (props) => {
-  const mapStyle = props.route.params.mapStyle||'standard';
+  const mapStyle = props.route.params.mapStyle || 'standard';
   const [animatedPosition] = useState(new Animated.Value(10));
   const [iconIsOpen, setIconIsOpen] = useState(false);
   const [markers, setMarkers] = useState([
@@ -43,7 +43,7 @@ export default (props) => {
     }, 3000);
     return () => clearInterval(timerId)
   }, [])
-  useEffect(() => {animate()}, [markers])
+  useEffect(() => { animate() }, [markers])
 
   const animate = () => {
     try {
@@ -120,6 +120,16 @@ export default (props) => {
             }}>
           </TouchableOpacity>
         </ImageBackground>
+        <View style={styles.shadow}>
+          <View style={styles.notificationsIconBackground}>
+            <ImageBackground source={require('../etc/notifications_grey_192x192.png')} style={styles.notificationsIcon}>
+              <TouchableOpacity
+                style={{ height: 55, width: 55 }}
+                onPressOut={() => {props.navigation.navigate('Notifications')}}>
+              </TouchableOpacity>
+            </ImageBackground>
+          </View>
+        </View>
         <Animated.View style={styles.settingsContainer(animatedPosition)}>
           <ImageBackground style={{ width: 50, height: 50 }} source={require('../etc/unnamed.png')}>
             <TouchableOpacity disabled={!iconIsOpen} style={{ width: 60, height: 60 }} onPressOut={() => props.navigation.navigate('Settings')} />
@@ -160,6 +170,30 @@ const styles = StyleSheet.create({
       inputRange: [50, 70],
       outputRange: [0.3, 1]
     })
-  })
-}
-)
+  }),
+  notificationsIcon: {
+    width: 35,
+    height: 35,
+  },
+  notificationsIconBackground: {
+    backgroundColor: 'white',
+    borderRadius: 30,
+    //position: 'absolute',
+    width: 55,
+    height: 55,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  shadow: {
+    position: 'absolute',
+    zIndex:2,
+    right: 10,
+    top: 10,
+    shadowOffset: { width: 10, height: 10 },
+    shadowColor: 'black',
+    shadowOpacity: 1,
+    elevation: 3,
+    borderRadius:20,
+    backgroundColor: 'transparent'
+  }
+})
