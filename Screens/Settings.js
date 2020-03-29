@@ -122,6 +122,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: 'black',
     paddingVertical:17,
-    marginRight:50
+    marginRight:55
   }
 })
