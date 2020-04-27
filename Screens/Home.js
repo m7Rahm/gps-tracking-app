@@ -162,9 +162,10 @@ const styles = StyleSheet.create({
   settingsContainer: (position) => ({
     zIndex: 1,
     width: 50,
+    top: 10,
     height: 50,
     position: 'absolute',
-    translateY: position,
+    transform :[{translateY: position},],
     left: 10,
     opacity: position.interpolate({
       inputRange: [50, 70],
@@ -189,7 +190,7 @@ const styles = StyleSheet.create({
     zIndex:2,
     right: 10,
     top: 10,
-    shadowOffset: { width: 10, height: 10 },
+    shadowOffset: { width: 2, height: 2 },
     shadowColor: 'black',
     shadowOpacity: 1,
     elevation: 3,
