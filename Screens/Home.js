@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     top: 10,
     height: 50,
     position: 'absolute',
-    transform :[{translateY: position},],
+    transform :[{translateY: position}],
     left: 10,
     opacity: position.interpolate({
       inputRange: [50, 70],
